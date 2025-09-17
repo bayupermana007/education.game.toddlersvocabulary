@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Kosakata Anak</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Nunito:wght@600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .score-board {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .score-item {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .game-area {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .question-card {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .question-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2d3436;
+            margin-bottom: 20px;
+        }
+        
+        .word-display {
+            font-size: 4rem;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .option-btn {
+            background: white;
+            border: 4px solid #ddd;
+            border-radius: 20px;
+            padding: 25px 20px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-color: #74b9ff;
+        }
+        
+        .option-btn.correct {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            border-color: #00b894;
+            animation: correctPulse 0.6s ease;
+        }
+        
+        .option-btn.wrong {
+            background: linear-gradient(135deg, #e17055, #d63031);
+            color: white;
+            border-color: #d63031;
+            animation: wrongShake 0.6s ease;
+        }
+        
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .control-btn {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .celebration {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #fd79a8, #fdcb6e);
+            color: white;
+            padding: 40px;
+            border-radius: 25px;
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            z-index: 1000;
+            animation: celebrationPop 0.8s ease;
+        }
+        
+        @keyframes celebrationPop {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            80% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 15px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            height: 100%;
+            border-radius: 15px;
+            transition: width 0.5s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .title { font-size: 2rem; }
+            .score-board { flex-direction: column; gap: 15px; }
+            .options-grid { grid-template-columns: 1fr; }
+            .controls { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎮 Game Kosakata</h1>
+            <p class="subtitle">Belajar Bahasa Inggris dengan Menyenangkan!</p>
+        </div>
+        
+        <div class="score-board">
+            <div class="score-item">
+                🏆 Skor: <span id="score">0</span>
+            </div>
+            <div class="score-item">
+                📊 Soal: <span id="current">1</span>/<span id="total">10</span>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 10%"></div>
+        </div>
+        
+        <div class="game-area">
+            <div class="question-card">
+                <div class="question-text">Apa arti dari kata ini?</div>
+                <div class="word-display" id="wordDisplay">🐱 Cat</div>
+            </div>
+            
+            <div class="options-grid" id="optionsGrid">
+                <!-- Options will be generated here -->
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn" onclick="nextQuestion()">Soal Berikutnya ➡️</button>
+            <button class="control-btn" onclick="restartGame()">Mulai Ulang 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        const vocabulary = [
+            { english: "Mom / Mommy", indonesian: "Ibu / Mama", emoji: "👩‍👧" },
+            { english: "Dad / Daddy", indonesian: "Ayah / Papa", emoji: "👨‍👧" },
+            { english: "Baby", indonesian: "Bayi", emoji: "👶" },
+            { english: "Brother", indonesian: "Kakak/Adik laki-laki", emoji: "👦" },
+            { english: "Sister", indonesian: "Kakak/Adik perempuan", emoji: "👧" },
+            { english: "Grandma", indonesian: "Nenek", emoji: "👵" },
+            { english: "Grandpa", indonesian: "Kakek", emoji: "👴" },
+            { english: "Cat", indonesian: "Kucing", emoji: "🐱" },
+            { english: "Dog", indonesian: "Anjing", emoji: "🐶" },
+            { english: "Bird", indonesian: "Burung", emoji: "🐦" },
+            { english: "Fish", indonesian: "Ikan", emoji: "🐟" },
+            { english: "Milk", indonesian: "Susu", emoji: "🥛" },
+            { english: "Water", indonesian: "Air", emoji: "💧" },
+            { english: "Juice", indonesian: "Jus", emoji: "🧃" },
+            { english: "Bread", indonesian: "Roti", emoji: "🍞" },
+            { english: "Rice", indonesian: "Nasi", emoji: "🍚" },
+            { english: "Egg", indonesian: "Telur", emoji: "🥚" },
+            { english: "Apple", indonesian: "Apel", emoji: "🍎" },
+            { english: "Banana", indonesian: "Pisang", emoji: "🍌" },
+            { english: "Orange", indonesian: "Jeruk", emoji: "🍊" },
+            { english: "Car", indonesian: "Mobil", emoji: "🚗" },
+            { english: "Bike", indonesian: "Sepeda", emoji: "🚲" },
+            { english: "Bus", indonesian: "Bus", emoji: "🚌" },
+            { english: "Train", indonesian: "Kereta", emoji: "🚆" },
+            { english: "Shoes", indonesian: "Sepatu", emoji: "👟" },
+            { english: "Shirt", indonesian: "Baju", emoji: "👕" },
+            { english: "Pants", indonesian: "Celana", emoji: "👖" },
+            { english: "Hat", indonesian: "Topi", emoji: "🎩" },
+            { english: "Bed", indonesian: "Tempat tidur", emoji: "🛏️" },
+            { english: "Chair", indonesian: "Kursi", emoji: "🪑" },
+            { english: "Table", indonesian: "Meja", emoji: "🏷️" },
+            { english: "Book", indonesian: "Buku", emoji: "📚" },
+            { english: "Toy", indonesian: "Mainan", emoji: "🧸" },
+            { english: "Ball", indonesian: "Bola", emoji: "⚽" },
+            { english: "Doll", indonesian: "Boneka", emoji: "👩‍🍼" },
+            { english: "Crayon", indonesian: "Krayon", emoji: "🖍️" },
+            { english: "Sun", indonesian: "Matahari", emoji: "☀️" },
+            { english: "Moon", indonesian: "Bulan", emoji: "🌙" },
+            { english: "Star", indonesian: "Bintang", emoji: "⭐" },
+            { english: "Sky", indonesian: "Langit", emoji: "🌌" },
+            { english: "Hand", indonesian: "Tangan", emoji: "✋" },
+            { english: "Foot", indonesian: "Kaki", emoji: "🦶" },
+            { english: "Eye", indonesian: "Mata", emoji: "👀" },
+            { english: "Ear", indonesian: "Telinga", emoji: "👂" },
+            { english: "Nose", indonesian: "Hidung", emoji: "👃" },
+            { english: "Mouth", indonesian: "Mulut", emoji: "👄" },
+            { english: "Hair", indonesian: "Rambut", emoji: "💇" },
+            { english: "Sleep", indonesian: "Tidur", emoji: "😴" },
+            { english: "Eat", indonesian: "Makan", emoji: "🍽️" },
+            { english: "Play", indonesian: "Bermain", emoji: "🎲" }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let gameQuestions = [];
+        let totalQuestions = 10;
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function initGame() {
+            gameQuestions = shuffleArray(vocabulary).slice(0, totalQuestions);
+            currentQuestion = 0;
+            score = 0;
+            updateScore();
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestion >= totalQuestions) {
+                endGame();
+                return;
+            }
+
+            const question = gameQuestions[currentQuestion];
+            document.getElementById('wordDisplay').textContent = `${question.emoji} ${question.english}`;
+            
+            // Generate options
+            const correctAnswer = question.indonesian;
+            const wrongAnswers = vocabulary
+                .filter(item => item.indonesian !== correctAnswer)
+                .map(item => item.indonesian);
+            
+            const shuffledWrong = shuffleArray(wrongAnswers).slice(0, 3);
+            const allOptions = shuffleArray([correctAnswer, ...shuffledWrong]);
+            
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+            
+            allOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(option, correctAnswer, button);
+                optionsGrid.appendChild(button);
+            });
+
+            updateProgress();
+        }
+
+        function selectAnswer(selected, correct, buttonElement) {
+            const allButtons = document.querySelectorAll('.option-btn');
+            allButtons.forEach(btn => btn.style.pointerEvents = 'none');
+
+            if (selected === correct) {
+                buttonElement.classList.add('correct');
+                score += 10;
+                showCelebration('🎉 Benar! Hebat sekali!');
+                setTimeout(() => {
+                    currentQuestion++;
+                    showQuestion();
+                }, 1500);
+            } else {
+                buttonElement.classList.add('wrong');
+                // Show correct answer
+                allButtons.forEach(btn => {
+                    if (btn.textContent === correct) {
+                        btn.classList.add('correct');
+                    }
+                });
+                showCelebration('😊 Coba lagi ya! Jawabannya: ' + correct);
+                setTimeout(() => {
+                    currentQuestion++;
+                    showQuestion();
+                }, 2500);
+            }
+            
+            updateScore();
+        }
+
+        function showCelebration(message) {
+            const celebration = document.createElement('div');
+            celebration.className = 'celebration';
+            celebration.textContent = message;
+            document.body.appendChild(celebration);
+            
+            setTimeout(() => {
+                document.body.removeChild(celebration);
+            }, 2000);
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('current').textContent = currentQuestion + 1;
+            document.getElementById('total').textContent = totalQuestions;
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            const percentage = (score / (totalQuestions * 10)) * 100;
+            let message = '';
+            
+            if (percentage >= 80) {
+                message = `🏆 Luar biasa! Skor: ${score}/${totalQuestions * 10}`;
+            } else if (percentage >= 60) {
+                message = `👏 Bagus sekali! Skor: ${score}/${totalQuestions * 10}`;
+            } else {
+                message = `😊 Terus belajar ya! Skor: ${score}/${totalQuestions * 10}`;
+            }
+            
+            showCelebration(message);
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        // Initialize game when page loads
+        window.onload = initGame;
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9807b6dee1a08194',t:'MTc1ODEwMjc4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
